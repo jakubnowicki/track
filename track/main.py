@@ -1,9 +1,15 @@
+from tkinter import W
 from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
+from requests import session
+
+from .controllers.tasks import Tasks
 from .core.exc import TrackError
 from .controllers.base import Base
 from .controllers.projects import Projects
+from .controllers.task_types import TaskTypes
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 from os import path
 from alembic.config import Config
 from alembic import command
@@ -27,7 +33,8 @@ def db_setup(app):
     if not db_status:
         app.log.info(f"Create DB structure for {db_path}.")
         migrate_db(migrations_path='alembic/', db_path=db_path, alembic_ini_path='./alembic.ini')
-    app.extend("db_engine", engine)
+    session = Session(engine)
+    app.extend("db_session", session)
 
 
 class Track(App):
@@ -64,7 +71,7 @@ class Track(App):
         output_handler = "jinja2"
 
         # register handlers
-        handlers = [Base, Projects]
+        handlers = [Base, Projects, TaskTypes, Tasks]
 
 
 class TrackTest(TestApp, Track):
