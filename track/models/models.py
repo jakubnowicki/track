@@ -24,6 +24,9 @@ class TaskType(Base):
 
     tasks = relationship("Task", back_populates="tasktypes")
 
+    def __repr__(self) -> str:
+        return f"Task type id: {self.id!r}; Task type name: {self.name!r}"
+
 
 class Task(Base):
     __tablename__ = "tasks"

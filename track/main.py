@@ -1,8 +1,11 @@
 from cement import App, TestApp, init_defaults
 from cement.core.exc import CaughtSignal
+
+from .controllers.tasks import Tasks
 from .core.exc import TrackError
 from .controllers.base import Base
 from .controllers.projects import Projects
+from .controllers.task_types import TaskTypes
 from sqlalchemy import create_engine
 from os import path
 from alembic.config import Config
@@ -64,7 +67,7 @@ class Track(App):
         output_handler = "jinja2"
 
         # register handlers
-        handlers = [Base, Projects]
+        handlers = [Base, Projects, TaskTypes, Tasks]
 
 
 class TrackTest(TestApp, Track):
